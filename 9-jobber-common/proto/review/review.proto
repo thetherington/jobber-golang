@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package review;
+
+import "proto/google/type/datetime.proto";
+
+option go_package = "github.com/thetherington/jobber-common/protogen/go/review";
+
+message RatingCategoryItem {
+    int32 Value = 1 [json_name = "value"];
+    int32 Count = 2 [json_name = "count"];
+}
+
+message RatingCategories {
+    RatingCategoryItem One    = 1 [json_name = "one"];
+    RatingCategoryItem Two    = 2 [json_name = "two"];
+    RatingCategoryItem Three  = 3 [json_name = "three"];
+    RatingCategoryItem Four   = 4 [json_name = "four"];
+    RatingCategoryItem Five   = 5 [json_name = "five"];
+}
+
+enum ReviewType {
+    BuyerReview    = 0;
+    SellerReview   = 1;
+    GigReview      = 2;
+}
+
+message ReviewMessageDetails {
+    string     GigId      = 1 [json_name = "gigId"];
+    string     ReviewerId = 2 [json_name = "reviewerId"];
+    string     SellerId   = 3 [json_name = "sellerId"];
+    string     Review     = 4 [json_name = "review"];
+    int32      Rating     = 5 [json_name = "rating"];
+    string     OrderId    = 6 [json_name = "orderId"];
+    ReviewType Action     = 7 [json_name = "action"];
+
+    optional google.type.DateTime CreatedAt = 8 [json_name = "createdAt"];
+}
+
+message ReviewDocument {
+    string Id               = 1  [json_name = "id"];
+    string GigId            = 2  [json_name = "gigId"];
+    string ReviewerId       = 3  [json_name = "reviewerId"];
+    string OrderId          = 4  [json_name = "orderId"];
+    string SellerId         = 5  [json_name = "sellerId"];
+    string Review           = 6  [json_name = "review"];
+    string ReviewerImage    = 7  [json_name = "reviewerImage"];
+    string ReviewerUsername = 8  [json_name = "reviewerUsername"];
+    string Country          = 9  [json_name = "country"];
+    string ReviewType       = 10 [json_name = "reviewType"];
+    int32  Rating           = 11 [json_name = "rating"];
+
+    optional google.type.DateTime CreatedAt = 12 [json_name = "createdAt"];
+}
+
+message RequestById {
+    string Id = 1 [json_name = "id"];
+}
+
+service ReviewService {
+    rpc CreateReview         (ReviewDocument) returns (ReviewResponse);
+    rpc GetReviewsBySellerId (RequestById)    returns (ReviewsResponse);
+    rpc GetReviewsByGigId    (RequestById)    returns (ReviewsResponse);
+}
+
+message ReviewResponse {
+    string         Message  = 1 [json_name = "message"];
+    ReviewDocument Review   = 2 [json_name = "review"];
+}
+
+message ReviewsResponse {
+    string                  Message  = 1 [json_name = "message"];
+    repeated ReviewDocument Reviews  = 2 [json_name = "reviews"];
+}

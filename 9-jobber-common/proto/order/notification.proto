@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package order;
+
+import "proto/google/type/datetime.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/thetherington/jobber-common/protogen/go/order";
+
+message NotificationMessage {
+    string Id               = 1  [json_name = "_id"];
+    string UserTo           = 2  [json_name = "userTo"];
+    string SenderUsername   = 3  [json_name = "senderUsername"];
+    string SenderPicture    = 4  [json_name = "senderPicture"];
+    string ReceiverUsername = 5  [json_name = "receiverUsername"];
+    string ReceiverPicture  = 6  [json_name = "receiverPicture"];
+    bool   IsRead           = 7  [json_name = "isRead"];
+    string Message          = 8  [json_name = "message"];
+    string OrderId          = 9  [json_name = "orderId"];
+    string Cmd              = 10 [json_name = "cmd"];
+
+    optional google.type.DateTime CreatedAt = 11 [json_name = "createdAt"];
+}
+
+message RequestWithParam {
+    string param = 1 [json_name = "param"];
+}
+
+service NotificationService {
+    rpc GetNotificationsById   (RequestWithParam) returns (NotificationsResponse);
+    rpc MarkNotificationAsRead (RequestWithParam) returns (NotificationResponse);
+    rpc SubscribeNotify        (RequestWithParam) returns (stream NotificationMessage);
+    rpc UnsubscribeNotify      (RequestWithParam) returns (google.protobuf.Empty);
+}
+
+message NotificationResponse {
+	string              Message      = 1 [json_name = "message"];
+	NotificationMessage Notification = 2 [json_name = "notification"];
+}
+
+message NotificationsResponse {
+	string                       Message       = 1 [json_name = "message"];
+	repeated NotificationMessage Notifications = 2 [json_name = "notifications"];
+}

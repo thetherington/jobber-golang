@@ -1,0 +1,230 @@
+syntax = "proto3";
+
+package order;
+
+import "proto/google/type/datetime.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/thetherington/jobber-common/protogen/go/order";
+
+enum Action {
+    CreateOrder    = 0;
+    ApproveOrder   = 1;
+    UpdateGigCount = 2;
+    CancelOrder    = 3;    
+}
+
+enum DeliveryChangeAction {
+    Approve = 0;
+    Reject  = 1; 
+}
+
+message OrderProps {
+    optional int32       OngoingJobs    = 1 [json_name = "ongoingJobs"];
+    optional int32       CompletedJobs  = 2 [json_name = "completedJobs"];
+    optional float       TotalEarnings  = 3 [json_name = "totalEarnings"];
+    optional int32       GigCount       = 4 [json_name = "gigCount"];
+    optional google.type.DateTime RecentDelivery = 5 [json_name = "recentDelivery"];
+}
+
+message SellerGigUpdate {
+    Action   Action                = 1 [json_name = "action"];
+    string   SellerId              = 2 [json_name = "sellerId"];
+    optional OrderProps OrderProps = 3 [json_name = "orderProps"];
+}
+
+message Offer {
+    string GigTitle         = 1 [json_name = "gigTitle"];
+    float  Price            = 2 [json_name = "price"];
+    string Description      = 3 [json_name = "description"];
+    int32  DeliverInDays    = 4 [json_name = "deliverInDays"];
+    string OldDeliveryDate  = 5 [json_name = "oldDeliveryDate"];
+    string NewDeliveryDate  = 6 [json_name = "newDeliveryDate"];
+    bool   Accepted         = 7 [json_name = "accepted"];
+    bool   Cancelled        = 8 [json_name = "cancelled"];
+    string Reason           = 9 [json_name = "reason"];
+}
+
+message DeliveredWork  {
+    string Message   = 1 [json_name = "message"];
+    string File      = 2 [json_name = "file"];
+    string FileType  = 3 [json_name = "fileType"];
+    int64  FileSize  = 4 [json_name = "fileSize"];
+    string FileName  = 5 [json_name = "fileName"];
+}
+
+message OrderEvents {
+    string PlaceOrder          = 1 [json_name = "placeOrder"];
+    string Requirements        = 2 [json_name = "requirements"];
+    string OrderStarted        = 3 [json_name = "orderStarted"];
+    string DeliveryDateUpdate  = 4 [json_name = "deliveryDateUpdate"];
+    string OrderDelivered      = 5 [json_name = "orderDelivered"];
+    string BuyerReview         = 6 [json_name = "buyerReview"];
+    string SellerReview        = 7 [json_name = "sellerReview"];
+}
+
+message OrderReview {
+    int32  Rating = 1 [json_name = "rating"];
+    string Review = 2 [json_name = "review"];
+    string Date   = 3 [json_name = "date"];
+}
+
+message ExtendedDelivery {
+    optional google.type.DateTime OriginalDate  = 1 [json_name = "originalDate"];
+    optional google.type.DateTime NewDate       = 2 [json_name = "newDate"];
+
+    int32  Days                = 3 [json_name = "days"];
+    string Reason              = 4 [json_name = "reason"];
+    string DeliveryDateUpdated = 5 [json_name = "deliveryDateUpdated"];
+}
+
+message OrderDocument {
+    string OrderId               = 1  [json_name = "orderId"];
+    string InvoiceId             = 2  [json_name = "invoiceId"];
+    string PaymentIntent         = 3  [json_name = "paymentIntent"];
+    string GigId                 = 4  [json_name = "gigId"];
+    string SellerId              = 5  [json_name = "sellerId"];
+    string SellerUsername        = 6  [json_name = "sellerUsername"];
+    string SellerImage           = 7  [json_name = "sellerImage"];
+    string SellerEmail           = 8  [json_name = "sellerEmail"];
+    string GigCoverImage         = 9  [json_name = "gigCoverImage"];
+    string GigMainTitle          = 10 [json_name = "gigMainTitle"];
+    string GigBasicTitle         = 11 [json_name = "gigBasicTitle"];
+    string GigBasicDescription   = 12 [json_name = "gigBasicDescription"];
+    string BuyerId               = 13 [json_name = "buyerId"];
+    string BuyerUsername         = 14 [json_name = "buyerUsername"];
+    string BuyerEmail            = 15 [json_name = "buyerEmail"];
+    string BuyerImage            = 16 [json_name = "buyerImage"];
+    string Status                = 17 [json_name = "status"];
+    string Requirements          = 18 [json_name = "requirements"];
+    int32  Quantity              = 19 [json_name = "quantity"];
+    float  Price                 = 20 [json_name = "price"];
+    float  ServiceFee            = 21 [json_name = "serviceFee"];
+    bool   Approved              = 22 [json_name = "approved"];
+    bool   Delivered             = 23 [json_name = "delivered"];
+    bool   Cancelled             = 24 [json_name = "cancelled"];
+
+    optional google.type.DateTime ApprovedAt  = 25 [json_name = "approvedAt"];
+    optional google.type.DateTime DateOrdered = 26 [json_name = "dateOrdered"];
+
+    optional Offer            Offer            = 27 [json_name = "offer"];
+    repeated DeliveredWork    DeliveredWork    = 28 [json_name = "deliveredWork"];
+    optional OrderEvents      Events           = 29 [json_name = "events"];
+    optional OrderReview      BuyerReview      = 30 [json_name = "buyerReview"];
+    optional OrderReview      SellerReview     = 31 [json_name = "sellerReview"];
+    optional ExtendedDelivery RequestExtension = 32 [json_name = "requestExtension"];
+}
+
+message OrderMessage {
+    optional string SellerId       = 1  [json_name = "sellerId"];
+    optional string BuyerId        = 2  [json_name = "buyerId"];
+    optional int32  OngoingJobs    = 3  [json_name = "ongoingJobs"];
+    optional int32  CompletedJobs  = 4  [json_name = "completedJobs"];
+    optional float  TotalEarnings  = 5  [json_name = "totalEarnings"];
+    optional string PurchasedGigs  = 6  [json_name = "purchasedGigs"];
+    optional string Type           = 7  [json_name = "type"];
+    optional string Username       = 8  [json_name = "username"];
+    optional string Template       = 9  [json_name = "template"];
+    optional string Sender         = 10 [json_name = "sender"];
+    optional string OfferLink      = 11 [json_name = "offerLink"];
+    optional string Amount         = 12 [json_name = "amount"];
+    optional string BuyerUsername  = 13 [json_name = "buyerUsername"];
+    optional string SellerUsername = 14 [json_name = "sellerUsername"];
+    optional string Title          = 15 [json_name = "title"];
+    optional string Description    = 16 [json_name = "description"];
+    optional string DeliveryDays   = 17 [json_name = "deliveryDays"];
+    optional string OrderId        = 18 [json_name = "orderId"];
+    optional string InvoiceId      = 19 [json_name = "invoiceId"];
+    optional string OrderDue       = 20 [json_name = "orderDue"];
+    optional string Requirements   = 21 [json_name = "requirements"];
+    optional string OrderUrl       = 22 [json_name = "orderUrl"];
+    optional string OriginalDate   = 23 [json_name = "originalDate"];
+    optional string NewDate        = 24 [json_name = "newDate"];
+    optional string Reason         = 25 [json_name = "reason"];
+    optional string Subject        = 26 [json_name = "subject"];
+    optional string Header         = 27 [json_name = "header"];
+    optional string Total          = 28 [json_name = "total"];
+    optional string Message        = 29 [json_name = "message"];
+    optional string ServiceFee     = 30 [json_name = "serviceFee"];
+    optional string RecentDelivery = 31 [json_name = "recentDelivery"];
+    optional string ReceiverEmail  = 32 [json_name = "receiverEmail"];
+}
+
+
+message PaymentIntentRequest {
+    float  Price   = 1 [json_name = "price"];
+    string BuyerId = 2 [json_name = "buyerId"];
+}
+
+message OrderCancelRequest {
+    string       PaymentIntentId  = 1 [json_name = "PaymentIntentId"];
+    string       OrderId          = 2 [json_name = "orderId"];
+    OrderMessage OrderData        = 3 [json_name = "orderData"];
+}
+
+message DeliveryExtensionRequest {
+    string           OrderId          = 1 [json_name = "orderId"];
+    ExtendedDelivery ExtendedDelivery = 2 [json_name = "extendedDelivery"];
+}
+
+message RequestById {
+    string Id = 1 [json_name = "id"];
+}
+
+message DeliveryDateRequest {
+    string               OrderId          = 1 [json_name = "orderId"];
+    DeliveryChangeAction Action           = 2 [json_name = "action"];
+    ExtendedDelivery     RequestExtension = 3 [json_name = "requestExtension"];
+}
+
+message DeliverOrderRequest {
+    string        OrderId       = 1 [json_name = "orderId"];
+    bool          Delivered     = 2 [json_name = "delivered"];
+    DeliveredWork DeliveredWork = 3 [json_name = "deliveredWork"];
+}
+
+message CancelOrderRequest {
+    string       OrderId       = 1 [json_name = "orderId"];
+    string       PaymentIntent = 2 [json_name = "paymentIntent"];
+    OrderMessage OrderMessage  = 3 [json_name = "orderMessage"];
+}
+
+message ApproveOrderRequest {
+    string       OrderId       = 1 [json_name = "orderId"];
+    OrderMessage OrderMessage  = 2 [json_name = "orderMessage"];
+}
+
+service OrderService {
+    rpc Create            (OrderDocument)             returns (OrderResponse);
+    rpc Intent            (PaymentIntentRequest)      returns (PaymentIntentResponse);
+    rpc GetOrderById      (RequestById)               returns (OrderResponse);
+    rpc GetSellerOrders   (RequestById)               returns (OrdersResponse);
+    rpc GetBuyerOrders    (RequestById)               returns (OrdersResponse);
+    rpc RequestExtension  (DeliveryExtensionRequest)  returns (OrderResponse);
+    rpc DeliveryDate      (DeliveryDateRequest)       returns (OrderResponse);
+    rpc DeliverOrder      (DeliverOrderRequest)       returns (OrderResponse);
+    rpc CancelOrder       (CancelOrderRequest)        returns (MessageResponse);
+    rpc ApproveOrder      (ApproveOrderRequest)       returns (OrderResponse);
+    rpc SubscribeOrder    (RequestById)               returns (stream OrderDocument);
+    rpc UnsubscribeOrder  (RequestById)               returns (google.protobuf.Empty);
+}
+
+message MessageResponse {
+    string Message = 1 [json_name = "message"];
+}
+
+message OrderResponse {
+    string        Message = 1 [json_name = "message"];
+    OrderDocument Order   = 2 [json_name = "order"];
+}
+
+message PaymentIntentResponse {
+    string  Message         = 1 [json_name = "message"];
+    string  ClientSecret    = 2 [json_name = "clientSecret"];
+    string  PaymentIntentId = 3 [json_name = "paymentIntentId"];
+}
+
+message OrdersResponse {
+	string                 Message  = 1 [json_name = "message"];
+	repeated OrderDocument Orders   = 2 [json_name = "orders"];
+}

@@ -1,0 +1,21 @@
+apm-server:
+  host: "apm_server_container:8200"
+
+auth:
+  secret_token: ""
+
+output.elasticsearch:
+  enabled: true
+  protocol: 'http'
+  hosts: '${ELASTICSEARCH_HOSTS:elasticsearch:9200}'
+  username: '${ELASTICSEARCH_USERNAME:}'
+  password: '${ELASTICSEARCH_PASSWORD:}'
+  ssl.enabled: false
+
+monitoring.enabled: true
+
+monitoring.elasticsearch:
+  protocol: 'http'
+  hosts: '${ELASTICSEARCH_HOSTS:elasticsearch:9200}'
+  username: '${ELASTICSEARCH_USERNAME:}'
+  password: '${ELASTICSEARCH_PASSWORD:}'

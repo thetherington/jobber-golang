@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package chat;
+
+import "proto/order/order.proto";
+import "proto/google/type/datetime.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/thetherington/jobber-common/protogen/go/chat";
+
+message RequestMsgConversations {
+    optional string MessageId  = 1 [json_name = "messageId"];
+    string SenderUsername      = 2 [json_name = "senderUsername"];
+    string ReceiverUsername    = 3 [json_name = "receiverUsername"];
+}
+
+message RequestWithParam {
+    string param = 1 [json_name = "param"];
+}
+
+message Conversation {
+    string ConversationId   = 1 [json_name = "conversationId"];
+    string SenderUsername   = 2 [json_name = "senderUsername"];
+    string ReceiverUsername = 3 [json_name = "receiverUsername"];
+}
+
+enum OfferAction {
+    Accepted  = 0;
+    Cancelled = 1;
+}
+
+message UpdateOfferRequest {
+    string      MessageId  = 1 [json_name = "messageId"];
+    OfferAction Action     = 2 [json_name = "action"];
+}
+
+message MessageDocument {
+    string Id                   = 1   [json_name = "_id"]; 
+	string CoversationId        = 2   [json_name = "conversationId"];
+	string Body                 = 3   [json_name = "body"];
+	string Url                  = 4   [json_name = "url"];
+	string File                 = 5   [json_name = "file"];
+	string FileType             = 6   [json_name = "fileType"];
+	string FileSize             = 7   [json_name = "fileSize"];
+	string FileName             = 8   [json_name = "fileName"];
+	string GigId                = 9   [json_name = "gigId"];
+	string SellerId             = 10   [json_name = "sellerId"];
+	string BuyerId              = 11  [json_name = "buyerId"];
+	string SenderUsername       = 12  [json_name = "senderUsername"];
+	string SenderPicture        = 13  [json_name = "senderPicture"];
+	string ReceiverUsername     = 14  [json_name = "receiverUsername"];
+	string ReceiverPicture      = 15  [json_name = "receiverPicture"];
+    bool   IsRead               = 16  [json_name = "isRead"];
+    optional order.Offer Offer  = 17  [json_name = "offer"];
+    bool   HasOffer             = 18  [json_name = "hasOffer"];
+    bool   HasConversationId    = 19  [json_name = "hasConversationId"];
+    optional google.type.DateTime  CreatedAt = 20 [json_name = "createdAt"];
+}
+
+service ChatService {
+    rpc CreateMessage (MessageDocument) returns (MessageResponse);
+    rpc GetConversations (RequestMsgConversations) returns (ConversationsResponse);
+    rpc GetMessages (RequestMsgConversations) returns (MessagesResponse);
+    rpc GetConversationList (RequestWithParam) returns (MessagesResponse);
+    rpc GetUserMessages (RequestWithParam) returns (MessagesResponse);
+    rpc MarkMultipleMessages (RequestMsgConversations) returns (ResponseMessage);
+    rpc MarkSingleMessage (RequestWithParam) returns (MessageResponse);
+    rpc UpdateOffer (UpdateOfferRequest) returns (MessageResponse);
+    rpc Subscribe (RequestWithParam) returns (stream MessageResponse);
+    rpc Unsubscribe (RequestWithParam) returns (google.protobuf.Empty);
+}
+
+message MessagesResponse {
+    string Message                    = 1 [json_name = "message"];
+    repeated MessageDocument Messages = 2 [json_name = "messages"];
+}
+
+message ConversationsResponse {
+    string Message                      = 1 [json_name = "message"];
+    repeated Conversation Conversations = 2 [json_name = "conversations"];
+}
+
+message MessageResponse {
+    string Message                  = 1 [json_name = "message"];
+    optional string ConversationId  = 2 [json_name = "conversationId"];
+    MessageDocument MessageData     = 3 [json_name = "messageData"];
+}
+
+message ResponseMessage {
+    string Message = 1 [json_name = "message"];
+}

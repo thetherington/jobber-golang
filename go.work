@@ -1,0 +1,13 @@
+go 1.22.2
+
+use (
+	./9-jobber-common
+	./1-gateway-service
+	./2-notification-service
+	./3-auth-service
+	./4-users-service
+	./5-gig-service
+	./6-chat-service
+	./7-order-service
+	./8-review-service
+)

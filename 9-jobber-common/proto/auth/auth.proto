@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package auth;
+
+import "proto/google/type/datetime.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/thetherington/jobber-common/protogen/go/auth";
+
+message Request {
+    string Payload = 1 [json_name = "payload"];
+}
+
+message SignUpRequest {
+    string Username       = 1 [json_name = "username"];
+    string Password       = 2 [json_name = "password"];
+    string Email          = 3 [json_name = "email"];
+    string Country        = 4 [json_name = "country"];
+    string ProfilePicture = 5 [json_name = "profilePicture"];
+}
+
+message SignInRequest {
+    string Username = 1 [json_name = "username"];
+    string Password = 2 [json_name = "password"];
+}
+
+message ForgotPasswordRequest {
+    string Email = 1 [json_name = "email"];
+}
+
+message ResetPasswordRequest {
+    string Password        = 1 [json_name = "password"];
+    string ConfirmPassword = 2 [json_name = "confirmPassword"];
+    string Token           = 3 [json_name = "token"];
+}
+
+message ChangePasswordRequest {
+    string CurrentPassword = 1 [json_name = "currentPassword"];
+    string NewPassword     = 2 [json_name = "newPassword"];
+}
+
+message VerifyEmailRequest {
+    string Token = 1 [json_name = "token"];
+}
+
+message RefreshTokenRequest {
+    string Username = 1 [json_name = "username"];
+}
+
+message ResendEmailRequest {
+    int32  UserId = 1 [json_name = "userId"];
+    string Email  = 2 [json_name = "email"];
+}
+
+message SeedRequest {
+    int32 Count = 1 [json_name = "count"];
+}
+
+service AuthService {
+    rpc SignUp (SignUpRequest) returns (AuthResponse);
+    rpc SignIn (SignInRequest) returns (AuthResponse);
+    rpc VerifyEmail (VerifyEmailRequest) returns (AuthResponse);
+    rpc ForgotPassword (ForgotPasswordRequest) returns (AuthResponse);
+    rpc ResetPassword (ResetPasswordRequest) returns (AuthResponse);
+    rpc ChangePassword (ChangePasswordRequest) returns (AuthResponse);
+    rpc Seed (SeedRequest) returns (Response);
+}
+
+service CurrentUserService {
+    rpc CurrentUser (google.protobuf.Empty) returns (AuthResponse);
+    rpc RefreshRoken (RefreshTokenRequest) returns (AuthResponse);
+    rpc ResendEmail (ResendEmailRequest) returns (AuthResponse);
+}
+
+message Response {
+    string Payload = 1 [json_name = "payload"];
+}
+
+message User {
+    optional int32  Id                      = 1  [json_name = "id"];
+    optional string ProfilePublicId         = 2  [json_name = "profilePublicId"];
+    optional string Username                = 3  [json_name = "username"];
+    optional string Email                   = 4  [json_name = "email"];
+    optional string Password                = 5  [json_name = "password"];
+    optional string Country                 = 6  [json_name = "country"];
+    optional string ProfilePicture          = 7  [json_name = "profilePicture"];
+    optional bool   EmailVerified           = 8  [json_name = "emailVerified"];
+    optional string EmailVerificationToken  = 9  [json_name = "emailVerificationToken"];
+    optional google.type.DateTime CreatedAt = 10 [json_name = "createdAt"];
+    optional google.type.DateTime UpdatedAt = 11 [json_name = "updatedAt"];
+    optional string PasswordResetToken      = 12 [json_name = "passwordResetToken"];
+    optional string PasswordResetExpires    = 13 [json_name = "passwordResetExpires"];;
+}
+
+message AuthResponse {
+    string          Message = 1 [json_name = "message"];
+    optional User   User    = 2 [json_name = "user"];
+    optional string Token   = 3 [json_name = "token"]; 
+}

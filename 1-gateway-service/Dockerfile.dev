@@ -1,0 +1,7 @@
+FROM alpine:latest
+
+RUN mkdir /app
+
+COPY build/gatewayService /app
+
+CMD ["/app/gatewayService"]

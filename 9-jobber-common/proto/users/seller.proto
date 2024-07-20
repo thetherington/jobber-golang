@@ -1,0 +1,131 @@
+syntax = "proto3";
+
+package users;
+
+import "proto/google/type/datetime.proto";
+import "proto/review/review.proto";
+
+option go_package = "github.com/thetherington/jobber-common/protogen/go/users";
+
+message GetSellerByIdRequest {
+    string Id = 1 [json_name = "id"];
+}
+
+message GetSellerByUsernameRequest {
+    string Username = 1 [json_name = "username"];
+}
+
+message RandomSellersRequest {
+    int32 Size = 1 [json_name = "size"];
+}
+
+message CreateUpdateSellerPayload {
+    string               Email             = 1  [json_name = "email"];
+    string               ProfilePublicId   = 2  [json_name = "profilePublicId"];
+    string               ProfilePicture    = 3  [json_name = "profilePicture"];
+    string               FullName          = 4  [json_name = "fullName"];
+    string               Description       = 5  [json_name = "description"];
+    string               Country           = 6  [json_name = "country"];
+    string               Oneliner          = 7  [json_name = "oneliner"]; 
+    int32                ResponseTime      = 8  [json_name = "responseTime"];
+    repeated string      Skills            = 9  [json_name = "skills"];
+    repeated Language    Languages         = 10 [json_name = "languages"];
+    repeated Experience  Experience        = 11 [json_name = "experience"];
+    repeated Education   Education         = 12 [json_name = "eduction"];
+    repeated Certificate Certificates      = 13 [json_name = "certificates"];
+    repeated string      SocialLinks       = 14 [json_name = "socialLinks"];
+}
+
+message SeedSellersRequest {
+    int32 Seed = 1 [json_name = "seed"];
+}
+
+message UpdateSellerRequest {
+    string                    Id     = 1 [json_name = "id"];
+    CreateUpdateSellerPayload Seller = 2 [json_name = "seller"];
+}
+
+service SellerService {
+    rpc CreateSeller (CreateUpdateSellerPayload) returns (SellerResponse);
+    rpc UpdateSeller (UpdateSellerRequest) returns (SellerResponse);
+    rpc GetSellerById (GetSellerByIdRequest) returns (SellerResponse);
+    rpc GetSellerByUsername (GetSellerByUsernameRequest) returns (SellerResponse);
+    rpc GetRandomSellers (RandomSellersRequest) returns (SellersResponse);
+    rpc SeedSellers (SeedSellersRequest) returns (SeedSellerResponse);
+}
+
+message SellerPayload {
+    string   Id                                     = 1  [json_name = "id"];
+    string   Username                               = 2  [json_name = "username"];
+    string   Email                                  = 3  [json_name = "email"];
+    string   ProfilePublicId                        = 4  [json_name = "profilePublicId"];
+    string   ProfilePicture                         = 5  [json_name = "profilePicture"];
+    string   FullName                               = 6  [json_name = "fullName"];
+    string   Description                            = 7  [json_name = "description"];
+    string   Country                                = 8  [json_name = "country"];
+    string   Oneliner                               = 9  [json_name = "oneliner"]; 
+    int32    ResponseTime                           = 10 [json_name = "responseTime"];
+    int32    RatingsCount                           = 11 [json_name = "ratingsCount"];
+    int32    RatingsSum                             = 12 [json_name = "ratingsSum"];
+    int32    OngoingJobs                            = 13 [json_name = "ongoingJobs"];
+    int32    CompletedJobs                          = 14 [json_name = "completedJobs"];
+    int32    CancelledJobs                          = 15 [json_name = "cancelledJobs"];
+    float    TotalEarnings                          = 16 [json_name = "totalEarnings"];
+    int32    TotalGigs                              = 17 [json_name = "totalGigs"];
+    optional google.type.DateTime  RecentDelivery   = 18 [json_name = "recentDelivery"];
+    repeated string                Skills           = 19 [json_name = "skills"];
+    repeated Language              Languages        = 20 [json_name = "languages"];
+    repeated Experience            Experience       = 21 [json_name = "experience"];
+    repeated Education             Education        = 22 [json_name = "eduction"];
+    repeated Certificate           Certificates     = 23 [json_name = "certificates"];
+    repeated string                SocialLinks      = 24 [json_name = "socialLinks"];
+    optional google.type.DateTime  CreatedAt        = 25 [json_name = "createdAt"];
+    optional google.type.DateTime  UpdatedAt        = 26 [json_name = "updatedAt"];
+    review.RatingCategories        RatingCategories = 27 [json_name = "ratingCategories"];
+}
+
+message SellerResponse {
+    string        Message = 1 [json_name = "message"];
+    SellerPayload Seller  = 2 [json_name = "seller"];
+}
+
+message SellersResponse {
+             string        Message = 1 [json_name = "message"];
+    repeated SellerPayload Sellers = 2 [json_name = "sellers"];
+}
+
+message SeedSellerResponse {
+    string Message = 1 [json_name = "message"];
+}
+
+message Language {
+    optional string Id       = 1 [json_name = "_id"];
+             string Language = 2 [json_name = "language"];
+             string Level    = 3 [json_name = "level"];
+}
+
+message Experience {
+    optional string Id                   = 1 [json_name = "_id"];
+             string Company              = 2 [json_name = "company"];
+             string Title                = 3 [json_name = "title"];
+             string StartDate            = 4 [json_name = "startDate"];
+             string EndDate              = 5 [json_name = "endDate"];
+             string Description          = 6 [json_name = "description"];
+             bool   CurrentlyWorkingHere = 7 [json_name = "currentlyWorkingHere"];
+}
+
+message Education {
+    optional string Id         = 1 [json_name = "_id"];
+             string Country    = 2 [json_name = "country"];
+             string University = 3 [json_name = "university"];
+             string Title      = 4 [json_name = "title"];
+             string Major      = 5 [json_name = "major"];
+             string Year       = 6 [json_name = "year"];
+}
+
+message Certificate {
+    optional string Id   = 1 [json_name = "_id"];
+             string Name = 2 [json_name = "name"];
+             string From = 3 [json_name = "from"];
+             string Year = 4 [json_name = "year"];
+}

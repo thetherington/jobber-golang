@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+package gig;
+
+import "proto/review/review.proto";
+import "proto/google/type/datetime.proto";
+
+option go_package = "github.com/thetherington/jobber-common/protogen/go/gig";
+
+message GigRequestById {
+    string Id = 1 [json_name = "id"];
+}
+
+message GigRequestUpdate {
+    string     Id  = 1 [json_name = "id"];
+    GigMessage Gig = 2 [json_name = "gig"];
+}
+
+message GigSeedRequest {
+    int32 Count = 1 [json_name = "count"];
+}
+
+message GigDeleteRequest {
+    string GigId    = 1 [json_name = "gigId"];
+    string SellerId = 2 [json_name = "sellerId"];
+}
+
+message GigUpdateActive {
+    string GigId    = 1 [json_name = "gigId"];
+    bool   Active   = 2 [json_name = "active"];
+}
+
+message SearchGigByValue {
+    string Value = 1 [json_name = "value"];
+}
+
+message GigSearchRequest {
+    string                  SearchQuery   = 1 [json_name = "searchQuery"];
+    optional PaginateProps  PaginateProps = 2 [json_name = "paginateProps"];
+    optional string         DeliveryTime  = 3 [json_name = "deliveryTime"];
+    optional double         Min           = 4 [json_name = "min"];
+    optional double         Max           = 5 [json_name = "max"];
+}
+
+message PaginateProps {
+    string From = 1 [json_name = "from"];
+    int32  Size = 2 [json_name = "size"];
+    string Type = 3 [json_name = "type"];
+}
+
+message GigMessage {
+    optional string                   ES_ID             = 1  [json_name = "_id"];
+    optional string                   ID                = 2  [json_name = "id"];
+    optional string                   SellerId          = 3  [json_name = "sellerId"];
+    optional string                   Title             = 4  [json_name = "title"];
+    optional string                   Username          = 5  [json_name = "username"];
+    optional string                   ProfilePicture    = 6  [json_name = "profilePicture"];
+    optional string                   Email             = 7  [json_name = "email"];
+    string                            Description       = 8  [json_name = "description"];
+    bool                              Active            = 9  [json_name = "active"];
+    string                            Categories        = 10 [json_name = "categories"];
+    repeated string                   SubCategories     = 11 [json_name = "subCategories"];
+    repeated string                   Tags              = 12 [json_name = "tags"];
+    int32                             RatingsCount      = 13 [json_name = "ratingsCount"];
+    int32                             RatingSum         = 14 [json_name = "ratingsSum"];
+    optional review.RatingCategories  RatingCategories  = 15 [json_name = "ratingCategories"];
+    string                            ExpectedDelivery  = 16 [json_name = "expectedDelivery"];
+    string                            BasicTitle        = 17 [json_name = "basicTitle"];
+    string                            BasicDescription  = 18 [json_name = "basicDescription"];
+    float                             Price             = 19 [json_name = "price"];
+    string                            CoverImage        = 20 [json_name = "coverImage"];
+    optional google.type.DateTime     CreatedAt         = 21 [json_name = "createdAt"];
+    int32                             SortId            = 22 [json_name = "sortId"];
+}
+
+service GigService {
+    rpc CreateGig           (GigMessage)       returns (GigResponse);
+    rpc UpdateGig           (GigRequestUpdate) returns (GigResponse);
+    rpc GetGigById          (GigRequestById)   returns (GigResponse);
+    rpc DeleteGig           (GigDeleteRequest) returns (GigMessageResponse);
+    rpc GetSellerGigs       (GigRequestById)   returns (GigsResponse);
+    rpc GetSellerPausedGigs (GigRequestById)   returns (GigsResponse);
+    rpc UpdateActiveGig     (GigUpdateActive)  returns (GigResponse);
+    rpc SeedGigs            (GigSeedRequest)   returns (GigMessageResponse);
+}
+
+service GigSearch {
+    rpc SearchGig         (GigSearchRequest) returns (SearchResponse);
+    rpc SearchGigCategory (SearchGigByValue) returns (SearchResponse);
+    rpc SearchGigTop      (SearchGigByValue) returns (SearchResponse);
+    rpc SearchGigSimilar  (SearchGigByValue) returns (SearchResponse);
+}
+
+message GigMessageResponse {
+    string Message = 1 [json_name = "message"];
+}
+
+message GigResponse {
+    string     Message = 1 [json_name = "message"];
+    GigMessage Gig     = 2 [json_name = "gig"];
+}
+
+message GigsResponse {
+    string   Message         = 1 [json_name = "message"];
+    repeated GigMessage Gigs = 2 [json_name = "gigs"];
+}
+
+message SearchResponse {
+    string              Message = 1 [json_name = "message"];
+    int32               Total   = 2 [json_name = "total"];
+    repeated GigMessage Gigs    = 3 [json_name = "gigs"];
+}

@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package auth;
+
+import "proto/gig/gig.proto";
+
+option go_package = "github.com/thetherington/jobber-common/protogen/go/auth";
+
+message SearchRequest {
+    string                  SearchQuery   = 1 [json_name = "searchQuery"];
+    optional PaginateProps  PaginateProps = 2 [json_name = "paginateProps"];
+    optional string         DeliveryTime  = 3 [json_name = "deliveryTime"];
+    optional double         Min           = 4 [json_name = "min"];
+    optional double         Max           = 5 [json_name = "max"];
+}
+
+message GetGigRequest {
+    string Id = 1 [json_name = "id"];
+}
+
+message PaginateProps {
+    string From = 1 [json_name = "from"];
+    int32  Size = 2 [json_name = "size"];
+    string Type = 3 [json_name = "type"];
+}
+
+service SearchService {
+    rpc GetGigById (GetGigRequest) returns (GigResponse);
+    rpc SearchGig  (SearchRequest) returns (SearchResponse);
+}
+
+message GigResponse {
+    gig.GigMessage Gig = 1 [json_name = "gig"];
+}
+
+message SearchResponse {
+    int64                    Total = 1 [json_name = "total"];
+    repeated gig.GigMessage  Hits  = 2 [json_name = "hits"];
+}

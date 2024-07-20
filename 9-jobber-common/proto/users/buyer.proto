@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package users;
+
+import "proto/google/type/datetime.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/thetherington/jobber-common/protogen/go/users";
+
+message BuyerUsernameRequest {
+    string username = 1 [json_name = "username"];
+}
+
+service BuyerService {
+    rpc GetBuyerByEmail (google.protobuf.Empty) returns (BuyerPayload);
+    rpc GetBuyerByUsername (google.protobuf.Empty) returns (BuyerPayload);
+    rpc GetBuyerByProvidedUsername (BuyerUsernameRequest) returns (BuyerPayload);
+}
+
+enum Action {
+    AUTH          = 0;
+    PURCHASED_GIG = 1;
+    CANCELLED_GIG = 2;
+}
+
+message BuyerPayload {
+    optional string               BuyerId        = 1  [json_name = "buyerId"];
+    optional string               Username       = 2  [json_name = "username"];
+    optional string               Email          = 3  [json_name = "email"];
+    optional string               ProfilePicture = 4  [json_name = "profilePicture"];
+    optional string               Country        = 5  [json_name = "country"];
+    optional bool                 IsSeller       = 6  [json_name = "isSeller"];
+    repeated string               PurchasedGigs  = 7  [json_name = "purchasedGigs"];
+    optional google.type.DateTime CreatedAt      = 8  [json_name = "createdAt"];
+    optional google.type.DateTime UpdatedAt      = 9  [json_name = "updatedAt"];
+    optional Action               Action         = 10 [json_name = "action"];
+}
+
+message BuyersPayload {
+    repeated BuyerPayload Buyers = 1 [json_name = "buyers"];
+}

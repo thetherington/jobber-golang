@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package auth;
+
+
+option go_package = "github.com/thetherington/jobber-common/protogen/go/notification";
+
+message EmailMessageDetails {
+    optional string ReceiverEmail = 1  [json_name = "receiverEmail"];
+    optional string Template      = 2  [json_name = "template"];
+    optional string VerifyLink    = 3  [json_name = "verifyLink"];
+    optional string ResetLink     = 4  [json_name = "resetLink"];
+    optional string Username      = 5  [json_name = "username"];
+}
+
+message OrderEmailMessageDetails {
+    optional string ReceiverEmail   = 1  [json_name = "receiverEmail"];
+    optional string Username        = 2  [json_name = "username"];
+    optional string Template        = 3  [json_name = "template"];
+    optional string Sender          = 4  [json_name = "sender"]; 
+    optional string OfferLink       = 5  [json_name = "offerLink"];
+    optional string Amount          = 6  [json_name = "amount"];
+    optional string BuyerUsername   = 7  [json_name = "buyerUsername"];
+    optional string SellerUsername  = 8  [json_name = "sellerUsername"];
+    optional string Title           = 9  [json_name = "title"];
+    optional string Description     = 10 [json_name = "description"];
+    optional string DeliveryDays    = 11 [json_name = "deliveryDays"];
+    optional string InvoiceId       = 12 [json_name = "invoiceId"];
+    optional string OrderId         = 13 [json_name = "orderId"];
+    optional string OrderDue        = 14 [json_name = "orderDue"];
+    optional string Requirements    = 15 [json_name = "requirements"];
+    optional string OrderUrl        = 16 [json_name = "orderUrl"]; 
+    optional string OriginalDate    = 17 [json_name = "originalDate"];
+    optional string NewDate         = 18 [json_name = "newDate"];
+    optional string Reason          = 19 [json_name = "reason"];
+    optional string Subject         = 20 [json_name = "subject"];
+    optional string Header          = 21 [json_name = "header"];
+    optional string Type            = 22 [json_name = "type"];
+    optional string Message         = 23 [json_name = "message"];
+    optional string ServiceFee      = 24 [json_name = "serviceFee"];
+    optional string Total           = 25 [json_name = "total"];
+}
